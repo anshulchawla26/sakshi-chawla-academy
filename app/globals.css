@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 210 40% 12%;
+    --card: 0 0% 100%;
+    --card-foreground: 210 40% 12%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 40% 12%;
+    --primary: 210 78% 28%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 40% 96%;
+    --secondary-foreground: 210 78% 20%;
+    --muted: 210 40% 96%;
+    --muted-foreground: 215 16% 45%;
+    --accent: 38 92% 50%;
+    --accent-foreground: 210 78% 15%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 210 78% 28%;
+    --radius: 0.85rem;
+  }
+  * { @apply border-border; }
+  html { scroll-behavior: smooth; }
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', ui-sans-serif, system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  h1, h2, h3, h4, .font-display {
+    font-family: 'Playfair Display', ui-serif, Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+  .glass-dark {
+    background: rgba(15, 76, 129, 0.35);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+  .text-gradient-navy {
+    background: linear-gradient(135deg, #0F4C81 0%, #1e6ba8 60%, #0A3A63 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .text-gradient-orange {
+    background: linear-gradient(135deg, #F59E0B 0%, #F97316 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .bg-mesh {
+    background-image:
+      radial-gradient(at 20% 10%, rgba(15, 76, 129, 0.10) 0px, transparent 55%),
+      radial-gradient(at 85% 25%, rgba(245, 158, 11, 0.10) 0px, transparent 55%),
+      radial-gradient(at 60% 90%, rgba(15, 76, 129, 0.08) 0px, transparent 55%);
+  }
+  .shadow-soft {
+    box-shadow: 0 10px 30px -12px rgba(15, 76, 129, 0.18), 0 2px 8px -3px rgba(15, 76, 129, 0.08);
+  }
+  .shadow-premium {
+    box-shadow: 0 30px 60px -20px rgba(15, 76, 129, 0.25), 0 10px 25px -10px rgba(15, 76, 129, 0.12);
+  }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+}
