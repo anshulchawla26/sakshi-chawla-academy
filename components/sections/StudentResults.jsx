@@ -23,7 +23,7 @@ export default function StudentResults({ results }) {
               className="group bg-white rounded-3xl overflow-hidden shadow-soft border border-navy-100 hover:shadow-premium transition"
             >
               <div className="relative aspect-[4/3]">
-                <Image src={r.photoUrl} alt={r.name} fill unoptimized className="object-cover group-hover:scale-105 transition-transform duration-500" />
+                <Image src={r.photoUrl} alt={r.name || 'Student'} fill unoptimized className="object-cover group-hover:scale-105 transition-transform duration-500" />
                 <div className="absolute top-3 left-3 inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-orange-400 text-white text-[11px] font-bold shadow-soft">
                   <Trophy className="h-3 w-3" /> {r.marks}
                 </div>

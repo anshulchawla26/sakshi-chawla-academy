@@ -84,7 +84,7 @@ export default function Gallery({ categories, images }) {
               className="relative max-w-5xl w-full aspect-[4/3] rounded-2xl overflow-hidden"
               onClick={(e) => e.stopPropagation()}
             >
-              <Image src={filtered[lightbox].imageUrl} alt={filtered[lightbox].caption || ''} fill unoptimized className="object-contain" />
+              <Image src={filtered[lightbox].imageUrl} alt={filtered[lightbox].caption || 'Gallery image'} fill unoptimized className="object-contain" />
             </motion.div>
             <div className="absolute bottom-6 inset-x-0 text-center text-white/90 text-sm">{filtered[lightbox].caption}</div>
           </motion.div>

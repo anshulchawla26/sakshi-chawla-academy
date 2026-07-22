@@ -33,7 +33,7 @@ export default function Testimonials({ items }) {
               <p className="mt-5 text-lg md:text-xl text-navy-800 font-medium leading-relaxed">“{items[i]?.review}”</p>
               <div className="mt-6 flex items-center gap-4">
                 <div className="relative h-14 w-14 rounded-full overflow-hidden ring-2 ring-orange-200">
-                  <Image src={items[i]?.photoUrl} alt={items[i]?.parentName} fill unoptimized className="object-cover" />
+                  <Image src={items[i]?.photoUrl} alt={items[i]?.parentName || 'Parent'} fill unoptimized className="object-cover" />
                 </div>
                 <div>
                   <div className="font-display text-lg font-bold text-navy-800">{items[i]?.parentName}</div>

@@ -28,7 +28,7 @@ export default function GoogleReviews({ items }) {
             >
               <div className="flex items-center gap-3">
                 <div className="relative h-11 w-11 rounded-full overflow-hidden">
-                  <Image src={r.photoUrl} alt={r.reviewerName} fill unoptimized className="object-cover" />
+                  <Image src={r.photoUrl} alt={r.reviewerName || 'Reviewer'} fill unoptimized className="object-cover" />
                 </div>
                 <div>
                   <div className="font-bold text-navy-800">{r.reviewerName}</div>

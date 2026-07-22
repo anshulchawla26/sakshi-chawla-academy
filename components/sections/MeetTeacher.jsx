@@ -30,7 +30,7 @@ export default function MeetTeacher({ data }) {
             <div className="absolute -inset-4 bg-gradient-to-br from-orange-400/20 to-navy-500/20 rounded-[2rem] blur-2xl" />
             <div className="relative rounded-[2rem] overflow-hidden shadow-premium">
               <div className="relative aspect-[4/5]">
-                <Image src={data?.photoUrl} alt={data?.name} fill unoptimized className="object-cover" />
+                <Image src={data?.photoUrl} alt={data?.name || 'Teacher'} fill unoptimized className="object-cover" />
                 <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-navy-900/85 via-navy-900/50 to-transparent p-6">
                   <div className="text-orange-300 text-xs font-semibold tracking-widest uppercase">{data?.title}</div>
                   <div className="font-display text-3xl font-bold text-white mt-1">{data?.name}</div>
