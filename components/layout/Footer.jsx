@@ -1,10 +1,17 @@
 'use client'
 
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { GraduationCap, Phone, MessageCircle, Mail, MapPin, Instagram, Facebook, Youtube, Linkedin, Twitter } from 'lucide-react'
 
 export default function Footer({ site }) {
-  const year = new Date().getFullYear()
+  // Compute year only after mount to avoid any SSR/CSR mismatch (e.g., across a
+  // year boundary between the SSR render and hydration).
+  const [year, setYear] = useState('')
+  useEffect(() => {
+    setYear(String(new Date().getFullYear()))
+  }, [])
+
   const wa = site?.whatsapp?.replace(/\D/g, '') || ''
   return (
     <footer className="bg-navy-900 text-white pt-16 pb-24 md:pb-10">
@@ -70,7 +77,7 @@ export default function Footer({ site }) {
       </div>
 
       <div className="container mt-12 pt-6 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-3 text-xs text-white/50">
-        <p>© {year} Sakshi Chawla Academy. All rights reserved.</p>
+        <p suppressHydrationWarning>© {year || '\u00a0'} Sakshi Chawla Academy. All rights reserved.</p>
         <div className="flex items-center gap-4">
           <Link href="/studio" className="hover:text-orange-400">CMS Studio</Link>
           <a href="#" className="hover:text-orange-400">Privacy Policy</a>

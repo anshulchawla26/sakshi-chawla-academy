@@ -17,7 +17,7 @@ import Testimonials from '@/components/sections/Testimonials'
 import GoogleReviews from '@/components/sections/GoogleReviews'
 import FAQ from '@/components/sections/FAQ'
 import Contact from '@/components/sections/Contact'
-import { Toaster } from 'sonner'
+import ClientToaster from '@/components/shared/ClientToaster'
 
 export const revalidate = 30
 
@@ -26,7 +26,7 @@ export default async function HomePage() {
 
   return (
     <EnquiryProvider>
-      <Toaster position="top-right" richColors />
+      <ClientToaster />
       <Navbar site={data.siteSettings} />
       <main className="pb-16 md:pb-0">
         <Hero data={data.hero} site={data.siteSettings} />
