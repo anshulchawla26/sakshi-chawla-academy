@@ -67,13 +67,18 @@ export default function Contact({ site }) {
             )}
           </motion.div>
 
-          <motion.form
-            onSubmit={submit}
+          <motion.div
             initial={{ opacity: 0, x: 20 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
-            className="lg:col-span-3 bg-gradient-to-br from-navy-50/60 to-white rounded-3xl p-6 md:p-8 border border-navy-100 shadow-soft"
+            className="lg:col-span-3"
           >
+            {/* Plain form (no framer-motion wrapper) so Radix Select's useId() stays
+                consistent between SSR and CSR. The parent motion.div still animates. */}
+            <form
+              onSubmit={submit}
+              className="bg-gradient-to-br from-navy-50/60 to-white rounded-3xl p-6 md:p-8 border border-navy-100 shadow-soft"
+            >
             <h3 className="font-display text-2xl font-bold text-navy-800">Send an Enquiry</h3>
             <p className="text-sm text-muted-foreground mt-1">Share your details — we’ll personally get in touch.</p>
 
@@ -100,7 +105,8 @@ export default function Contact({ site }) {
             <Button type="submit" disabled={state === 'loading'} className="mt-5 w-full sm:w-auto bg-navy-600 hover:bg-navy-700 text-white rounded-xl h-12 px-8">
               {state === 'loading' ? (<><Loader2 className="h-4 w-4 mr-2 animate-spin" /> Sending...</>) : state === 'done' ? (<><CheckCircle2 className="h-4 w-4 mr-2" /> Sent</>) : (<><Send className="h-4 w-4 mr-2" /> Send Enquiry</>)}
             </Button>
-          </motion.form>
+            </form>
+          </motion.div>
         </div>
       </div>
     </section>

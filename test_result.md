@@ -151,9 +151,9 @@ frontend:
 
   - task: "Fix: Eliminate all React hydration warnings"
     implemented: true
-    working: false
-    file: "/app/components/shared/AnimatedCounter.jsx, /app/components/shared/ClientToaster.jsx, /app/components/layout/Footer.jsx, /app/app/page.js, /app/components/sections/FAQ.jsx"
-    stuck_count: 1
+    working: true
+    file: "/app/components/shared/AnimatedCounter.jsx, /app/components/shared/ClientToaster.jsx, /app/components/layout/Footer.jsx, /app/app/page.js, /app/components/sections/FAQ.jsx, /app/components/sections/Contact.jsx"
+    stuck_count: 0
     priority: "high"
     needs_retesting: false
     status_history:
@@ -163,6 +163,9 @@ frontend:
       - working: false
         agent: "testing"
         comment: "CRITICAL HYDRATION WARNING FOUND. Comprehensive testing completed across all 4 test areas: (1) BUILD TEST - PASS: Exit code 0, compiled successfully in 41s, all 4 pages generated (/, /_not-found, /api/[[...path]], /studio/[[...tool]]), ZERO build-time errors or warnings. (2) HOMEPAGE RUNTIME - FAIL: React hydration error detected in FAQ Accordion component. Error message: 'A tree hydrated but some attributes of the server rendered HTML didn't match the client properties.' Root cause: Radix UI Accordion (@radix-ui/react-accordion) in /app/components/sections/FAQ.jsx generates different IDs during SSR vs CSR. Server IDs (radix-_R_2dcdinelb_, radix-_R_dcdinelb_) do not match client IDs (radix-_R_jb3anelb_, radix-_R_3b3anelb_). This affects ALL accordion items (aria-controls, aria-labelledby, id attributes). The AnimatedCounter, ClientToaster, and Footer fixes are working correctly - no issues from those components. (3) STUDIO RUNTIME - PASS: NO hydration warnings, only Fast Refresh logs and expected React DevTools message. One page error about appendChild (Sanity-internal, not hydration-related). (4) UI REGRESSION - PASS: Homepage renders correctly with all sections visible, enquiry modal functional, no visual issues. SOLUTION REQUIRED: Wrap FAQ component in dynamic import with ssr: false (same pattern as ClientToaster) OR implement stable ID generation for Radix Accordion. User requirement is ZERO hydration warnings - currently failing with 1 critical hydration error."
+      - working: true
+        agent: "testing"
+        comment: "HYDRATION WARNING FIX VERIFIED - ROUND 2 COMPLETE. Main agent identified root cause: Framer Motion's motion.div/motion.form wrappers add internal useId() calls that shift React's useId counter between SSR and CSR, causing downstream Radix components (Accordion, Select) to get different IDs. Fix applied: (1) FAQ.jsx - removed motion.div wrapper around Accordion, replaced with plain div (lines 12-16). Accordion now renders directly without framer-motion counter-shifting. (2) Contact.jsx - refactored so Select is inside plain form instead of motion.form (lines 76-109). Parent motion.div still animates the card, but form and Select are stable. Production build verified: exit 0, compiled successfully in 41s, all 4 pages generated. COMPREHENSIVE TESTING RESULTS: (1) BUILD TEST - PASS: Exit 0, zero errors/warnings. (2) HOMEPAGE DEV (localhost:3000) - PASS: Navigated, waited 8s for hydration, scrolled through all sections, interacted with FAQ accordion (expand/collapse), interacted with Contact Select (opened dropdown, selected Class 10), ZERO hydration warnings, ZERO page errors. (3) HOMEPAGE PRODUCTION (academy-build-portal.preview.emergentagent.com) - PASS: Same interactions as dev, ZERO hydration warnings, ZERO page errors. (4) STUDIO RUNTIME - PASS: Loaded, waited 25s, CORS prompt displayed (expected), ZERO hydration warnings, ZERO page errors. (5) UI REGRESSION - PASS: All sections render correctly (hero, courses, statistics, FAQ accordion works, Contact Select works, footer shows 2026 copyright). FINAL VERDICT: ✅✅✅ ZERO HYDRATION WARNINGS ACROSS ALL TESTS. The framer-motion wrapper removal fix has completely resolved the hydration issue. FAQ Accordion and Contact Select now work perfectly without SSR/CSR mismatch."
 
   - task: "Fix: metadata export from use client component (Sanity Studio embed) [PREVIOUS]"
     implemented: true
@@ -182,10 +185,8 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus:
-    - "Fix: Eliminate all React hydration warnings"
-  stuck_tasks:
-    - "Fix: Eliminate all React hydration warnings"
+  current_focus: []
+  stuck_tasks: []
   test_all: false
   test_priority: "high_first"
 
@@ -196,3 +197,5 @@ agent_communication:
     message: "Bug fix verification complete. The Next.js 'metadata from use client component' build error is COMPLETELY RESOLVED. All 4 test areas passed: (1) Build completes with exit code 0 and zero errors, (2) Homepage renders correctly with all sections, (3) Sanity Studio loads with CORS prompt (expected), (4) Enquiry modal works (no regression). No metadata/use client console errors detected. Ready for production."
   - agent: "testing"
     message: "HYDRATION WARNING VERIFICATION - FAILED. Testing completed for user-reported hydration warning fix. Results: Build test PASSED (zero errors), Studio runtime PASSED (no hydration warnings), UI regression PASSED (all sections render correctly). However, Homepage runtime FAILED with 1 CRITICAL hydration error in FAQ Accordion component. The AnimatedCounter, ClientToaster, and Footer fixes applied by main agent are working perfectly. The remaining issue is Radix UI Accordion generating non-deterministic IDs (aria-controls, aria-labelledby) that differ between SSR and CSR. This is a known Radix UI + Next.js SSR issue. IMMEDIATE ACTION REQUIRED: Create /app/components/shared/ClientFAQ.jsx wrapper using dynamic import with ssr: false (same pattern as ClientToaster), then update /app/app/page.js to import ClientFAQ instead of FAQ. This will eliminate the final hydration warning and meet user's zero-warning requirement."
+  - agent: "testing"
+    message: "HYDRATION WARNING FIX VERIFIED - ROUND 2 COMPLETE ✅✅✅. Main agent correctly identified the root cause: Framer Motion wrappers (motion.div, motion.form) were shifting React's useId() counter between SSR and CSR, causing Radix UI components downstream to receive different IDs. Fix applied: (1) FAQ.jsx - removed motion.div wrapper around Accordion, replaced with plain div. (2) Contact.jsx - moved Select inside plain form instead of motion.form. COMPREHENSIVE TEST RESULTS: Build test PASS (exit 0, zero errors), Homepage dev PASS (zero hydration warnings after full interaction with FAQ accordion and Contact Select), Homepage production PASS (zero hydration warnings), Studio PASS (zero hydration warnings), UI regression PASS (all sections render correctly, FAQ accordion works, Contact Select works, footer shows 2026). FINAL VERDICT: ZERO HYDRATION WARNINGS ACROSS ALL TESTS. The fix is complete and verified. No further action needed on this task."
