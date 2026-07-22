@@ -149,6 +149,21 @@ frontend:
         agent: "main"
         comment: "All 13 sections render. Screenshots verified hero, courses, why-choose-us + timeline, and gallery look premium. Not yet tested with Playwright automation."
 
+  - task: "Fix: metadata export from use client component (Sanity Studio embed)"
+    implemented: true
+    working: true
+    file: "/app/app/studio/[[...tool]]/page.jsx, /app/app/studio/layout.jsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Refactored: page.jsx keeps 'use client' + NextStudio only; layout.jsx (server component, no 'use client') exports { metadata, viewport } from 'next-sanity/studio'. Verified production build: 'yarn build' completes with ✓ Compiled successfully and generates all 4 pages including /studio/[[...tool]] with zero errors. Needs testing agent verification: (1) production build has zero errors, (2) /studio route loads without runtime errors, (3) / homepage still renders correctly with all sections, (4) no browser console errors related to 'use client' metadata."
+      - working: true
+        agent: "testing"
+        comment: "VERIFIED - Bug fix completely resolved. Build test: Exit code 0, compiled successfully in 14.3s, all 4 pages generated with ZERO metadata/use client errors. Homepage runtime: HTTP 200, hero section 'Build Strong Concepts.' renders, all sections (Courses, Why Us, Gallery, FAQ, Contact) visible, navbar with 'Sakshi Chawla' branding present, NO console errors related to metadata/use client. Sanity Studio runtime: HTTP 200, CORS setup prompt displays (expected behavior), NO console errors related to metadata/use client. Regression test: Enquiry modal opens successfully. The Next.js 'metadata from use client component' build error is COMPLETELY RESOLVED."
+
 metadata:
   created_by: "main_agent"
   version: "1.0"
@@ -167,3 +182,5 @@ test_plan:
 agent_communication:
   - agent: "main"
     message: "MVP delivered. Homepage live, Sanity Studio embedded and functional (needs CORS origin added by user in Sanity dashboard). Enquiry form persists to MongoDB. Placeholder content shows automatically until CMS is populated."
+  - agent: "testing"
+    message: "Bug fix verification complete. The Next.js 'metadata from use client component' build error is COMPLETELY RESOLVED. All 4 test areas passed: (1) Build completes with exit code 0 and zero errors, (2) Homepage renders correctly with all sections, (3) Sanity Studio loads with CORS prompt (expected), (4) Enquiry modal works (no regression). No metadata/use client console errors detected. Ready for production."
