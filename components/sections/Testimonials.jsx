@@ -1,10 +1,10 @@
 'use client'
 
-import Image from 'next/image'
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Star, Quote, ChevronLeft, ChevronRight } from 'lucide-react'
 import SectionHeading from '@/components/shared/SectionHeading'
+import Avatar from '@/components/shared/Avatar'
 
 export default function Testimonials({ items }) {
   const [i, setI] = useState(0)
@@ -32,12 +32,12 @@ export default function Testimonials({ items }) {
               </div>
               <p className="mt-5 text-lg md:text-xl text-navy-800 font-medium leading-relaxed">“{items[i]?.review}”</p>
               <div className="mt-6 flex items-center gap-4">
-                <div className="relative h-14 w-14 rounded-full overflow-hidden ring-2 ring-orange-200">
-                  <Image src={items[i]?.photoUrl} alt={items[i]?.parentName || 'Parent'} fill unoptimized className="object-cover" />
-                </div>
+                <Avatar src={items[i]?.photoUrl} name={items[i]?.parentName || 'Parent'} size={56} ring />
                 <div>
                   <div className="font-display text-lg font-bold text-navy-800">{items[i]?.parentName}</div>
-                  <div className="text-xs text-muted-foreground">Parent of {items[i]?.studentName}</div>
+                  {items[i]?.studentName && (
+                    <div className="text-xs text-muted-foreground">Parent of {items[i]?.studentName}</div>
+                  )}
                 </div>
               </div>
             </motion.div>
