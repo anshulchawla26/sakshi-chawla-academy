@@ -182,6 +182,42 @@ frontend:
         agent: "testing"
         comment: "FINAL VERIFICATION COMPLETE - ALL TESTS PASSED ✅✅✅✅. Comprehensive testing across all 5 required test areas: (1) PRODUCTION BUILD - PASS: Exit code 0, compiled successfully in 42s, all 4 pages generated (/, /_not-found, /api/[[...path]], /studio/[[...tool]]), ZERO warnings about 'hydrat', 'mismatch', 'Warning:', or 'missing required' in build output. (2) DEV HOMEPAGE - PASS: Navigated to localhost:3000, waited 10s for hydration, scrolled through all sections (y=1500, 3000, 6000, 9000), Next.js dev overlay shows 0 issues, window.__reactWarnings.length === 0 (ZERO console warnings/errors captured). (3) HOMEPAGE INTERACTIVE TEST - PASS: Performed all interactions - Enquire Now modal (opened/closed with ESC), FAQ accordion (expand/collapse), Contact Select (opened dropdown, selected Class 10), Gallery lightbox (opened successfully) - window.__reactWarnings.length === 0 after EVERY interaction (0 new warnings generated). (4) STUDIO ROUTE - PASS: Navigated to localhost:3000/studio, waited 25s for Sanity initialization, window.__reactWarnings.length === 0, dev overlay shows 0 issues, CORS prompt displayed (expected behavior). (5) PRODUCTION PREVIEW URL - CRITICAL ISSUE FOUND: Production URL (academy-build-portal.preview.emergentagent.com) shows Runtime Error 'Cannot find module /vendor-chunks/motion.js' - this is a DEPLOYMENT issue, NOT a code issue. The local production build completed successfully, indicating the code is correct but the deployed artifacts are either outdated or missing framer-motion chunks. ANSWER TO REVIEW QUESTION: YES - Next.js dev overlay shows exactly 0 issues on homepage AND studio, with window.__reactWarnings.length === 0 after full page load and all interactions. The alt property fix has COMPLETELY RESOLVED all console error warnings. The production deployment issue is separate and requires redeployment of the latest build artifacts."
 
+  - task: "CRITICAL: Fix /studio route - Cannot find module motion.js error"
+    implemented: false
+    working: false
+    file: "/app/app/studio/[[...tool]]/page.jsx"
+    stuck_count: 0
+    priority: "critical"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "CRITICAL BUG DISCOVERED during production readiness audit. The /studio route is completely broken with HTTP 500 error: 'Cannot find module ./vendor-chunks/motion.js'. Error occurs in webpack-runtime.js when loading /app/.next/server/app/studio/[[...tool]]/page.js. This blocks ALL CMS editing functionality. Root cause: The studio page.jsx imports framer-motion (via Sanity Studio components), but the motion.js vendor chunk is not being generated or referenced correctly in the server build. The file exists at /app/.next/server/vendor-chunks/framer-motion.js but webpack is looking for './vendor-chunks/motion.js'. This is likely a Next.js 15 + Sanity Studio + Framer Motion compatibility issue or webpack configuration problem. IMPACT: Production deployment is BLOCKED - users cannot edit CMS content. Homepage works perfectly but CMS is inaccessible. IMMEDIATE ACTION REQUIRED: (1) Check if Sanity Studio has framer-motion as a dependency, (2) Try dynamic import for studio page, (3) Check Next.js 15 compatibility with current Sanity Studio version, (4) Consider upgrading/downgrading dependencies, (5) Check webpack configuration for vendor chunk naming."
+
+  - task: "Fix: Broken #results navigation link"
+    implemented: false
+    working: false
+    file: "/app/components/layout/Navbar.jsx, /app/components/layout/Footer.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "BROKEN LINK FOUND during production readiness audit. Navbar and Footer contain link to #results, but the StudentResults section (id='results') is not rendered on the page because data.studentResults is empty or all records were filtered out by getData.js. The conditional rendering in page.js line 39: {data.studentResults?.length > 0 && <StudentResults results={data.studentResults} />} means the section only appears when there's valid data. SOLUTIONS: (1) Remove #results link from Navbar.jsx NAV_ITEMS array and Footer.jsx quick links, OR (2) Always render StudentResults section with a 'Coming Soon' placeholder when data is empty, OR (3) Add CMS data for student results so section renders. RECOMMENDATION: Option 1 (remove link) is safest for production - the section will appear automatically once CMS data is added."
+
+  - task: "Fix: 4 images not loading (Google Reviews + Gallery)"
+    implemented: false
+    working: false
+    file: "/app/components/sections/GoogleReviews.jsx, /app/components/sections/Gallery.jsx"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: true
+    status_history:
+      - working: false
+        agent: "testing"
+        comment: "IMAGE LOADING ISSUE found during production readiness audit. 4 out of 7 images on homepage fail to load (naturalWidth=0, naturalHeight=0) despite returning HTTP 200: (1) Sanity CDN gallery image: https://cdn.sanity.io/images/1lxnu5gg/production/5497b3f801f7e16b1cc25f0a4bc90fcb4073f0b3-1920x1080.png?fit=max&auto=format, (2-4) Three Google Reviews Unsplash images with w=200&q=80. All images are accessible via curl (HTTP 200), but Next.js Image component shows them as broken. POSSIBLE CAUSES: (1) Lazy loading not triggering properly, (2) Next.js Image optimization failing for these specific URLs, (3) CORS issues with Sanity CDN or Unsplash, (4) Images below fold not loading due to viewport/intersection observer issues. INVESTIGATION NEEDED: (1) Check browser Network tab for actual HTTP status, (2) Test with unoptimized prop on Image components, (3) Check if images load after scroll/wait, (4) Verify Sanity CDN CORS configuration, (5) Check Next.js image optimization configuration in next.config.js."
+
   - task: "Fix: metadata export from use client component (Sanity Studio embed) [PREVIOUS]"
     implemented: true
     working: true
@@ -200,7 +236,8 @@ metadata:
   run_ui: false
 
 test_plan:
-  current_focus: []
+  current_focus:
+    - "Production Readiness Audit"
   stuck_tasks: []
   test_all: false
   test_priority: "high_first"
@@ -216,3 +253,5 @@ agent_communication:
     message: "HYDRATION WARNING FIX VERIFIED - ROUND 2 COMPLETE ✅✅✅. Main agent correctly identified the root cause: Framer Motion wrappers (motion.div, motion.form) were shifting React's useId() counter between SSR and CSR, causing Radix UI components downstream to receive different IDs. Fix applied: (1) FAQ.jsx - removed motion.div wrapper around Accordion, replaced with plain div. (2) Contact.jsx - moved Select inside plain form instead of motion.form. COMPREHENSIVE TEST RESULTS: Build test PASS (exit 0, zero errors), Homepage dev PASS (zero hydration warnings after full interaction with FAQ accordion and Contact Select), Homepage production PASS (zero hydration warnings), Studio PASS (zero hydration warnings), UI regression PASS (all sections render correctly, FAQ accordion works, Contact Select works, footer shows 2026). FINAL VERDICT: ZERO HYDRATION WARNINGS ACROSS ALL TESTS. The fix is complete and verified. No further action needed on this task."
   - agent: "testing"
     message: "FINAL VERIFICATION COMPLETE - MISSING ALT PROPERTIES FIX VERIFIED ✅✅✅✅. Comprehensive testing across all 5 required test areas confirms ZERO warnings/errors: (1) PRODUCTION BUILD - PASS: Exit 0, compiled successfully in 42s, all 4 pages generated, ZERO warnings about missing alt properties. (2) DEV HOMEPAGE - PASS: Next.js dev overlay shows 0 issues, window.__reactWarnings.length === 0 after full page load and scrolling through all sections. (3) HOMEPAGE INTERACTIVE TEST - PASS: All interactions (Enquire Now modal, FAQ accordion, Contact Select, Gallery lightbox) completed with window.__reactWarnings.length === 0 throughout - NO new warnings generated. (4) STUDIO ROUTE - PASS: Zero console warnings, dev overlay shows 0 issues. (5) PRODUCTION PREVIEW URL - DEPLOYMENT ISSUE: Runtime error 'Cannot find module /vendor-chunks/motion.js' indicates deployed artifacts are outdated or incomplete. This is NOT a code issue - local production build succeeded. ANSWER TO REVIEW QUESTION: YES ✅ - Next.js dev overlay shows exactly 0 issues on homepage AND studio, with window.__reactWarnings.length === 0 after full page load and all interactions. The defensive alt property fallbacks (Student, Teacher, Parent, Reviewer, Gallery, Gallery image) have COMPLETELY RESOLVED all console error warnings. Production deployment requires redeployment of latest build artifacts to resolve framer-motion chunk issue."
+  - agent: "testing"
+    message: "PRODUCTION READINESS AUDIT COMPLETE - CRITICAL ISSUES FOUND ❌❌. Comprehensive audit conducted across all 9 areas (Build, Runtime, Responsive, SEO, Accessibility, Forms, Links, Images, CMS, Performance). RESULTS: (A) BUILD & RUNTIME - CRITICAL FAIL: /studio route completely broken with 'Cannot find module ./vendor-chunks/motion.js' error (500 status). Homepage works perfectly (0 warnings, 0 errors). (B) RESPONSIVE - NOT FULLY TESTED. (C) SEO - PASS: Sitemap (8 URLs), robots.txt, all meta tags, JSON-LD schema, canonical link present. (D) ACCESSIBILITY - PASS: Skip link works, ARIA labels present, all 7 images have alt text, keyboard nav works. (E) FORMS - PARTIAL: Contact form validation works but test had DOM issue. (F) LINKS - FAIL: #results link broken (StudentResults section not rendered because data.studentResults is empty/filtered). (G) IMAGES - FAIL: 4 images not loading (1 Sanity CDN gallery image + 3 Google Reviews Unsplash images). Images return HTTP 200 but naturalWidth=0 (lazy loading issue or Next.js Image optimization problem). (H) CMS - PASS: Conditional rendering works, empty sections hidden. (I) PERFORMANCE - PASS: Page size 155KB. CRITICAL ACTIONS REQUIRED: (1) Fix /studio route motion.js module error - this blocks CMS editing completely. (2) Fix #results broken link - either remove from navbar or ensure StudentResults always renders with placeholder. (3) Investigate why 4 images fail to load despite HTTP 200 responses. PRODUCTION DEPLOYMENT BLOCKED until /studio route is fixed."

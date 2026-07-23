@@ -43,14 +43,20 @@ export default function Testimonials({ items }) {
             </motion.div>
           </AnimatePresence>
 
-          <div className="flex justify-center items-center gap-3 mt-6">
-            <button onClick={prev} className="h-11 w-11 rounded-full bg-white border border-navy-200 text-navy-700 hover:bg-navy-600 hover:text-white flex items-center justify-center transition"><ChevronLeft className="h-5 w-5" /></button>
+          <div className="flex justify-center items-center gap-3 mt-6" role="group" aria-label="Testimonial navigation">
+            <button onClick={prev} aria-label="Previous testimonial" className="h-11 w-11 rounded-full bg-white border border-navy-200 text-navy-700 hover:bg-navy-600 hover:text-white flex items-center justify-center transition"><ChevronLeft className="h-5 w-5" aria-hidden="true" /></button>
             <div className="flex items-center gap-1.5">
               {items.map((_, k) => (
-                <button key={k} onClick={() => setI(k)} className={`h-2 rounded-full transition-all ${k === i ? 'w-8 bg-orange-400' : 'w-2 bg-navy-200'}`} aria-label={`Go to ${k+1}`} />
+                <button
+                  key={k}
+                  onClick={() => setI(k)}
+                  aria-label={`Show testimonial ${k + 1} of ${items.length}`}
+                  aria-current={k === i ? 'true' : 'false'}
+                  className={`h-2 rounded-full transition-all ${k === i ? 'w-8 bg-orange-400' : 'w-2 bg-navy-200'}`}
+                />
               ))}
             </div>
-            <button onClick={next} className="h-11 w-11 rounded-full bg-white border border-navy-200 text-navy-700 hover:bg-navy-600 hover:text-white flex items-center justify-center transition"><ChevronRight className="h-5 w-5" /></button>
+            <button onClick={next} aria-label="Next testimonial" className="h-11 w-11 rounded-full bg-white border border-navy-200 text-navy-700 hover:bg-navy-600 hover:text-white flex items-center justify-center transition"><ChevronRight className="h-5 w-5" aria-hidden="true" /></button>
           </div>
         </div>
       </div>

@@ -74,8 +74,9 @@ export default function MeetTeacher({ data }) {
               {ytId ? (
                 <div className="relative rounded-2xl overflow-hidden shadow-soft aspect-video">
                   <iframe
-                    src={`https://www.youtube.com/embed/${ytId}`}
-                    title="Teacher Introduction"
+                    src={`https://www.youtube-nocookie.com/embed/${ytId}?rel=0`}
+                    title={`Meet ${data?.name || 'Teacher'} \u2014 Introduction video`}
+                    loading="lazy"
                     className="w-full h-full"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen

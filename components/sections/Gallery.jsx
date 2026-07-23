@@ -25,9 +25,11 @@ export default function Gallery({ categories, images }) {
       <div className="container">
         <SectionHeading eyebrow="Gallery" title="Inside the Academy" description="Snapshots of learning moments, both offline and online." />
 
-        <div className="flex flex-wrap justify-center gap-2 mb-8">
+        <div className="flex flex-wrap justify-center gap-2 mb-8" role="tablist" aria-label="Gallery categories">
           <button
             onClick={() => setActive('all')}
+            role="tab"
+            aria-selected={active === 'all'}
             className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all ${active === 'all' ? 'bg-navy-600 text-white border-navy-600' : 'bg-white text-navy-700 border-navy-200 hover:border-orange-300'}`}
           >
             All
@@ -36,6 +38,8 @@ export default function Gallery({ categories, images }) {
             <button
               key={c._id}
               onClick={() => setActive(c.slug.current)}
+              role="tab"
+              aria-selected={active === c.slug.current}
               className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all ${active === c.slug.current ? 'bg-navy-600 text-white border-navy-600' : 'bg-white text-navy-700 border-navy-200 hover:border-orange-300'}`}
             >
               {c.name}
@@ -48,6 +52,7 @@ export default function Gallery({ categories, images }) {
             <motion.button
               key={img._id}
               onClick={() => openIdx(idx)}
+              aria-label={`Open gallery image: ${img.caption || 'Untitled'}`}
               initial={{ opacity: 0, scale: 0.95 }}
               whileInView={{ opacity: 1, scale: 1 }}
               viewport={{ once: true, amount: 0.1 }}

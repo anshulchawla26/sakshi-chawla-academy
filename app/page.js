@@ -28,19 +28,21 @@ export default async function HomePage() {
     <EnquiryProvider>
       <ClientToaster />
       <Navbar site={data.siteSettings} />
-      <main className="pb-16 md:pb-0">
+      <main id="main" className="pb-16 md:pb-0">
         <Hero data={data.hero} site={data.siteSettings} />
         <About data={data.about} />
         <MeetTeacher data={data.teacher} />
-        <Courses courses={data.courses} />
-        <WhyChooseUs items={data.whyChooseUs} />
-        <LearningProcess steps={data.learningSteps} />
-        <Statistics stats={data.statistics} />
-        <StudentResults results={data.studentResults} />
-        <Gallery categories={data.galleryCategories} images={data.galleryImages} />
-        <Testimonials items={data.testimonials} />
-        <GoogleReviews items={data.googleReviews} />
-        <FAQ items={data.faqs} />
+        {data.courses?.length > 0 && <Courses courses={data.courses} />}
+        {data.whyChooseUs?.length > 0 && <WhyChooseUs items={data.whyChooseUs} />}
+        {data.learningSteps?.length > 0 && <LearningProcess steps={data.learningSteps} />}
+        {data.statistics?.length > 0 && <Statistics stats={data.statistics} />}
+        {data.studentResults?.length > 0 && <StudentResults results={data.studentResults} />}
+        {data.galleryImages?.length > 0 && (
+          <Gallery categories={data.galleryCategories} images={data.galleryImages} />
+        )}
+        {data.testimonials?.length > 0 && <Testimonials items={data.testimonials} />}
+        {data.googleReviews?.length > 0 && <GoogleReviews items={data.googleReviews} />}
+        {data.faqs?.length > 0 && <FAQ items={data.faqs} />}
         <Contact site={data.siteSettings} />
       </main>
       <Footer site={data.siteSettings} />
