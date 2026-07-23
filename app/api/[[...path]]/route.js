@@ -40,7 +40,8 @@ async function handleRoute(request, { params }) {
 
     // POST /api/enquiry — save contact/enquiry form submissions
     if (route === '/enquiry' && method === 'POST') {
-      const body = await request.json()
+      let body = {}
+      try { body = await request.json() } catch (e) { body = {} }
       const { name, phone, email, studentClass, message } = body || {}
       if (!name || !phone) {
         return handleCORS(
