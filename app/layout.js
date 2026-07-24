@@ -79,6 +79,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+        <meta name="theme-color" content="#0F4C81" />
+        <meta name="color-scheme" content="light" />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
@@ -89,6 +91,11 @@ export default function RootLayout({ children }) {
         <a href="#home" className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:px-4 focus:py-2 focus:bg-navy-700 focus:text-white focus:rounded-lg">
           Skip to main content
         </a>
+        <noscript>
+          <div style={{ padding: '16px', textAlign: 'center', background: '#0F4C81', color: 'white', fontFamily: 'system-ui, sans-serif' }}>
+            This site works best with JavaScript enabled. Please enable JavaScript, or contact us directly at the phone number listed on our advertising materials.
+          </div>
+        </noscript>
         <Providers>{children}</Providers>
       </body>
     </html>
